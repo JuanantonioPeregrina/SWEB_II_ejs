@@ -5,6 +5,13 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+//swagger
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load(path.join(__dirname, 'schema', 'library.schema.yaml'));
+
+
+
 
 const indexRouter = require('./routes/index');
 const booksRouter = require('./routes/book');
@@ -20,6 +27,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
 app.use('/', indexRouter);
 app.use(process.env.BASE_URI + '/book', booksRouter);
